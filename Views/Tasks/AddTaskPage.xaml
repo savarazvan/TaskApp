@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskApp.Views.Tasks.AddTaskPage"
+             xmlns:viewModelTasks="clr-namespace:TaskApp.ViewModels.Tasks"
+             Title="Add New Task">
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="15">
+            <Label Text="Title:" FontAttributes="Bold"/>
+            <Entry Text="{Binding NewTask.Title}" 
+                   Placeholder="Enter task title"
+                   Style="{StaticResource InputStyle}"/>
+
+            <Label Text="Description:" FontAttributes="Bold"/>
+            <Editor Text="{Binding NewTask.Description}" 
+                    HeightRequest="100"
+                    Placeholder="Enter task description"
+                    Style="{StaticResource InputStyle}"/>
+
+            <Label Text="Due Date:" FontAttributes="Bold"/>
+            <DatePicker Date="{Binding NewTask.DueDate}"
+                        MinimumDate="{Binding TodayDate}"
+                        Style="{StaticResource InputStyle}"/>
+
+            <Label Text="Category:" FontAttributes="Bold"/>
+            <Picker ItemsSource="{Binding Categories}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedItem="{Binding SelectedCategory}"
+                    Style="{StaticResource InputStyle}">
+            </Picker>
+
+            <Label Text="Priority:" FontAttributes="Bold"/>
+            <Picker ItemsSource="{Binding Priorities}"
+                    ItemDisplayBinding="{Binding Level}"
+                    SelectedItem="{Binding SelectedPriority}"
+                    Style="{StaticResource InputStyle}"/>
+
+            <Label Text="Completed:" FontAttributes="Bold"/>
+            <Switch IsToggled="{Binding NewTask.IsCompleted}"
+                    HorizontalOptions="Start"/>
+
+            <Button Text="Save Task" 
+                    Command="{Binding SaveTaskCommand}"
+                    Style="{StaticResource PrimaryButton}"/>
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

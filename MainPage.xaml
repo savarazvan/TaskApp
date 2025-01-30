@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TaskApp"
+             x:Class="TaskApp.MainPage">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False"/>
+    </Shell.BackButtonBehavior>
+    <AbsoluteLayout>
+        <CollectionView x:Name="CategoriesCollection">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10" Margin="5">
+                        <StackLayout>
+                            <Label Text="{Binding Name}" FontSize="Medium"/>
+                            <Label Text="{Binding Tasks.Count, StringFormat='{0} tasks'}"/>
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button 
+                x:Name="plusButton"
+                Text="+" Clicked="OnAddButtonClicked" 
+                BackgroundColor="{DynamicResource PageBackgroundColor}" 
+                CornerRadius="30" 
+                WidthRequest="60" 
+                FontSize="Large"
+                HeightRequest="60" 
+                VerticalOptions="End" 
+                HorizontalOptions="End" 
+                AbsoluteLayout.LayoutBounds="1, 1, AutoSize, AutoSize" 
+                AbsoluteLayout.LayoutFlags="PositionProportional"/>
+        
+        <StackLayout x:Name="ActionButtons" IsVisible="False" 
+                     AbsoluteLayout.LayoutBounds="1, 0.9, AutoSize, AutoSize" 
+                     AbsoluteLayout.LayoutFlags="PositionProportional">
+            <Button Text="Add Category"/>
+            <Button Text="Add Task" Clicked="OnAddTaskClicked"/>
+        </StackLayout>
+    </AbsoluteLayout>
+</ContentPage>

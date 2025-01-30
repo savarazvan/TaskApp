@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TaskApp.Views.Login.LoginPage"
+             Title="Login">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IsEnabled="False" IsVisible="False"/>
+    </Shell.BackButtonBehavior>
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="15">
+            <Label Text="Username:" FontAttributes="Bold"/>
+            <Entry Text="{Binding Username}" 
+                   Placeholder="Enter your username"
+                   Style="{StaticResource InputStyle}"/>
+
+            <Label Text="Password:" FontAttributes="Bold"/>
+            <Entry Text="{Binding Password}" 
+                   Placeholder="Enter your password"
+                   IsPassword="True"
+                   Style="{StaticResource InputStyle}"/>
+
+            <Button Text="Login" 
+                    Command="{Binding LoginCommand}"
+                    Style="{StaticResource PrimaryButton}"/>
+            <Button Text="Register" 
+                    Command="{Binding RegisterCommand}"
+                    Style="{StaticResource SecondaryButton}"/>
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
