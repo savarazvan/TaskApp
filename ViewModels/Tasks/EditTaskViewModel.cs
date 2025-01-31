@@ -1,19 +1,21 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TaskApp.Models;
 using TaskApp.Services;
 
 namespace TaskApp.ViewModels.Tasks
 {
-    public partial class AddTaskViewModel : ObservableObject
+    public partial class EditTaskViewModel : ObservableObject
     {
         private readonly DatabaseService _dbService;
 
         [ObservableProperty]
-        private TaskItem _newTask = new TaskItem
-        {
-            DueDate = DateTime.Today.AddDays(1)
-        };
+        private TaskItem _taskToEdit;
 
         [ObservableProperty]
         private List<Category> _categories;
@@ -32,9 +34,10 @@ namespace TaskApp.ViewModels.Tasks
 
         public DateTime TodayDate => DateTime.Today;
 
-        public AddTaskViewModel(DatabaseService dbService)
+        public EditTaskViewModel(DatabaseService dbService, TaskItem taskToEdit)
         {
             _dbService = dbService;
+            _taskToEdit = taskToEdit;
             Initialize();
         }
 
@@ -42,12 +45,14 @@ namespace TaskApp.ViewModels.Tasks
         {
             LoadPriorities();
             LoadCategories();
+            SelectedCategory = Categories.FirstOrDefault(c => c.Id == _taskToEdit.CategoryId);
+            SelectedPriority = Priorities.FirstOrDefault(p => p.Id == _taskToEdit.PriorityId);
         }
 
         private async void LoadCategories()
         {
             var currentUser = _dbService.GetUser(App.LoggedInUserame);
-            if(currentUser == null)
+            if (currentUser == null)
             {
                 await Shell.Current.DisplayAlert("Error", "Logged in user not found.", "OK");
                 return;
@@ -80,11 +85,11 @@ namespace TaskApp.ViewModels.Tasks
                     return;
                 }
 
-                NewTask.CategoryId = SelectedCategory.Id;
-                NewTask.PriorityId = SelectedPriority.Id;
-                NewTask.UserId = currentUser.Id;
+                _taskToEdit.CategoryId = SelectedCategory.Id;
+                _taskToEdit.PriorityId = SelectedPriority.Id;
+                _taskToEdit.UserId = currentUser.Id;
 
-                await _dbService.AddTask(NewTask);
+                await _dbService.UpdateTask(_taskToEdit);
 
                 await Shell.Current.GoToAsync("..");
             }
@@ -96,9 +101,9 @@ namespace TaskApp.ViewModels.Tasks
 
         private bool ValidateForm()
         {
-            return !string.IsNullOrWhiteSpace(NewTask.Title) &&
-                         SelectedCategory != null &&
-                         SelectedPriority != null;
+            return !string.IsNullOrWhiteSpace(_taskToEdit.Title) &&
+                   SelectedCategory != null &&
+                   SelectedPriority != null;
         }
     }
 }

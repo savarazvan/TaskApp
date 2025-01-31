@@ -7,19 +7,82 @@
         <BackButtonBehavior IsEnabled="False" IsVisible="False"/>
     </Shell.BackButtonBehavior>
     <AbsoluteLayout>
-        <CollectionView x:Name="CategoriesCollection">
+        <CollectionView ItemsSource="{Binding Categories}"
+                Margin="10"
+                BackgroundColor="#F4F5F7">
+
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Padding="10" Margin="5">
-                        <StackLayout>
-                            <Label Text="{Binding Name}" FontSize="Medium"/>
-                            <Label Text="{Binding Tasks.Count, StringFormat='{0} tasks'}"/>
+                    <Frame Padding="15" 
+                   Margin="5" 
+                   CornerRadius="8"
+                   BackgroundColor="{Binding Color}"
+                           WidthRequest="360"
+                   BorderColor="#DFE1E6">
+
+                        <StackLayout Spacing="12">
+                            <!-- Category Header -->
+                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                <Button Text="{Binding Name}"
+                                        Background="Transparent"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type local:MainPage}}, 
+                        Path=BindingContext.EditCategoryCommand}" CommandParameter="{Binding}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="Black"/>
+
+                                <Label Text="{Binding Tasks.Count, StringFormat='{0} tasks'}"
+                                   FontSize="12"
+                                       Margin="0,13,0,0"
+                                   TextColor="Black"/>
+                            </StackLayout>
+
+                            <CollectionView ItemsSource="{Binding Tasks}">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Vertical" />
+                                </CollectionView.ItemsLayout>
+
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="0,6"
+                                    ColumnDefinitions="*,Auto,Auto"
+                                    ColumnSpacing="10">
+
+                                            <!-- Task Title -->
+                                            <Label Text="{Binding Title}"
+                                           FontSize="14"
+                                           TextColor="#172B4D"
+                                           VerticalOptions="Center"/>
+
+                                            <!-- Priority Indicator -->
+                                            <BoxView Grid.Column="1"
+                                           CornerRadius="3"
+                                           WidthRequest="16"
+                                           HeightRequest="16"
+                                           VerticalOptions="Center"
+                                           BackgroundColor="{Binding Priority.Id, Converter={StaticResource PriorityColorConverter}}"/>
+
+                                            <!-- Due Date -->
+                                            <Label Grid.Column="2"
+                                           Text="{Binding DueDate, StringFormat='{0:MMM dd}'}"
+                                           FontSize="12"
+                                           TextColor="#5E6C84"
+                                           VerticalOptions="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+
+                                <CollectionView.Footer>
+                                    <BoxView HeightRequest="1" 
+                                   Color="#EBECF0"
+                                   Margin="0,8"/>
+                                </CollectionView.Footer>
+                            </CollectionView>
                         </StackLayout>
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
         <Button 
                 x:Name="plusButton"
                 Text="+" Clicked="OnAddButtonClicked" 
@@ -36,7 +99,7 @@
         <StackLayout x:Name="ActionButtons" IsVisible="False" 
                      AbsoluteLayout.LayoutBounds="1, 0.9, AutoSize, AutoSize" 
                      AbsoluteLayout.LayoutFlags="PositionProportional">
-            <Button Text="Add Category"/>
+            <Button Text="Add Category" Clicked="OnAddCategoryClicked"/>
             <Button Text="Add Task" Clicked="OnAddTaskClicked"/>
         </StackLayout>
     </AbsoluteLayout>
