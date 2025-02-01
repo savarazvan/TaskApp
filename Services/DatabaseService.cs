@@ -23,10 +23,12 @@ namespace TaskApp.Services
         {
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
+            await _context.Entry(category).ReloadAsync();
         }
 
         public async Task<List<Category>> GetCategories(int userId)
         {
+
             return await _context.Categories
                 .Where(c => c.UserId == userId)
                 .Include(c => c.Tasks)

@@ -34,10 +34,9 @@ namespace TaskApp.ViewModels.Tasks
 
         public DateTime TodayDate => DateTime.Today;
 
-        public EditTaskViewModel(DatabaseService dbService, TaskItem taskToEdit)
+        public EditTaskViewModel(DatabaseService dbService)
         {
             _dbService = dbService;
-            _taskToEdit = taskToEdit;
             Initialize();
         }
 
@@ -47,6 +46,7 @@ namespace TaskApp.ViewModels.Tasks
             LoadCategories();
             SelectedCategory = Categories.FirstOrDefault(c => c.Id == _taskToEdit.CategoryId);
             SelectedPriority = Priorities.FirstOrDefault(p => p.Id == _taskToEdit.PriorityId);
+            TaskToEdit = Categories.FirstOrDefault(c => c.Id == _taskToEdit.CategoryId)?.Tasks.FirstOrDefault(t => t.Id == _taskToEdit.Id);
         }
 
         private async void LoadCategories()

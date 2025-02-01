@@ -22,7 +22,7 @@ namespace TaskApp.ViewModels.Categories
         {
             try
             {
-                var currentUser = _dbService.GetUser(App.LoggedInUserame);
+                var currentUser = await _dbService.GetUser(App.LoggedInUserame);
                 if (currentUser == null)
                 {
                     await Shell.Current.DisplayAlert("Error", "Logged in user not found.", "OK");
