@@ -44,14 +44,22 @@ namespace TaskApp.ViewModels.Tasks
         {
             LoadPriorities();
             LoadCategories();
-            SelectedCategory = Categories.FirstOrDefault(c => c.Id == _taskToEdit.CategoryId);
-            SelectedPriority = Priorities.FirstOrDefault(p => p.Id == _taskToEdit.PriorityId);
-            TaskToEdit = Categories.FirstOrDefault(c => c.Id == _taskToEdit.CategoryId)?.Tasks.FirstOrDefault(t => t.Id == _taskToEdit.Id);
+            foreach(var category in Categories)
+            {
+                var task = category.Tasks.FirstOrDefault(t => t.Id == App.SelectedTaskId);
+                if(task != null)
+                {
+                    TaskToEdit = task;
+                    SelectedCategory = TaskToEdit.Category;
+                    SelectedPriority = TaskToEdit.Priority;
+                    break;
+                }
+            }
         }
 
         private async void LoadCategories()
         {
-            var currentUser = _dbService.GetUser(App.LoggedInUserame);
+            var currentUser = await _dbService.GetUser(App.LoggedInUserame);
             if (currentUser == null)
             {
                 await Shell.Current.DisplayAlert("Error", "Logged in user not found.", "OK");
@@ -65,6 +73,29 @@ namespace TaskApp.ViewModels.Tasks
         {
             Priorities = await _dbService.GetPriorities();
             SelectedPriority = Priorities.FirstOrDefault();
+        }
+        [RelayCommand]
+        private async Task DeleteTask()
+        {
+            try
+            {
+                var confirm = await Shell.Current.DisplayAlert("Confirm", "Are you sure you want to delete this task?", "Yes", "No");
+                if (!confirm) return;
+
+                var currentUser = await _dbService.GetUser(App.LoggedInUserame);
+                if (currentUser == null)
+                {
+                    await Shell.Current.DisplayAlert("Error", "Logged in user not found.", "OK");
+                    return;
+                }
+
+                await _dbService.DeleteTask(TaskToEdit);
+                await Shell.Current.GoToAsync("..");
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+            }
         }
 
         [RelayCommand]

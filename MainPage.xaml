@@ -49,10 +49,14 @@
                                     ColumnSpacing="10">
 
                                             <!-- Task Title -->
-                                            <Label Text="{Binding Title}"
+                                            <Button Text="{Binding Title}"
+                                                   HorizontalOptions="Start"
                                            FontSize="14"
                                            TextColor="#172B4D"
-                                           VerticalOptions="Center"/>
+                                           BackgroundColor="Transparent"
+                                           VerticalOptions="Center"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type local:MainPage}}, 
+                        Path=BindingContext.EditTaskCommand}" CommandParameter="{Binding}"/>
 
                                             <!-- Priority Indicator -->
                                             <BoxView Grid.Column="1"
